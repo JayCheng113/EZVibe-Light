@@ -104,7 +104,7 @@ EZVibe Light is EZVibe's little sibling. Same ideas, radically different philoso
 | **Over SSH** | No (needs browser) | **Yes** |
 | **Form factor** | Browser tab | **Your terminal** |
 
-If you want dashboards and WebGL terminals, use EZVibe. If you want something that starts before you finish blinking, use EZVibe Light.
+If you want dashboards and WebGL terminals, use [EZVibe](https://github.com/JayCheng113/EZVibe). If you want something that starts before you finish blinking, use EZVibe Light.
 
 ## Keyboard Shortcuts
 
