@@ -41,7 +41,7 @@ const red = (s: string) => `\x1b[31m${s}\x1b[0m`;
 
 console.log(`
 ${cyan('  ╔═══════════════════════════════╗')}
-${cyan('  ║')}   ${green('EZVibe Light')} v0.1.0        ${cyan('║')}
+${cyan('  ║')}   ${green('EZVibe Light')} v0.1.1        ${cyan('║')}
 ${cyan('  ║')}   Lightweight Claude Manager   ${cyan('║')}
 ${cyan('  ╚═══════════════════════════════╝')}
 `);
