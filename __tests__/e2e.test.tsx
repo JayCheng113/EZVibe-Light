@@ -41,7 +41,7 @@ afterEach(() => {
 
 describe('App E2E', () => {
   it('should render the initial screen', () => {
-    const { lastFrame } = render(<App />);
+    const { lastFrame } = render(<App version="test" />);
     const frame = lastFrame();
 
     expect(frame).toContain('EZVibe Light');
@@ -49,7 +49,7 @@ describe('App E2E', () => {
   });
 
   it('should show status bar with shortcuts', () => {
-    const { lastFrame } = render(<App />);
+    const { lastFrame } = render(<App version="test" />);
     const frame = lastFrame();
 
     expect(frame).toContain('[n]');
@@ -58,7 +58,7 @@ describe('App E2E', () => {
   });
 
   it('should show panel tabs', () => {
-    const { lastFrame } = render(<App />);
+    const { lastFrame } = render(<App version="test" />);
     const frame = lastFrame();
 
     expect(frame).toContain('Detail');
@@ -67,7 +67,7 @@ describe('App E2E', () => {
   });
 
   it('should show help overlay when ? is pressed and close on next key', async () => {
-    const { lastFrame, stdin } = render(<App />);
+    const { lastFrame, stdin } = render(<App version="test" />);
 
     stdin.write('?');
     await new Promise(r => setTimeout(r, 50));

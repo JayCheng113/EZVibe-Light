@@ -24,7 +24,7 @@ type Overlay =
 
 // -- App --
 
-export function App() {
+export function App({ version }: { version: string }) {
   const store = useMemo(() => new Store(), []);
   const { exit } = useApp();
 
@@ -264,7 +264,7 @@ export function App() {
       {/* Header */}
       <Box paddingX={1}>
         <Text bold color="cyan">EZVibe Light</Text>
-        <Text dimColor> v0.1.0</Text>
+        <Text dimColor> v{version}</Text>
       </Box>
 
       {/* Main content */}

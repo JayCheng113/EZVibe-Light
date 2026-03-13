@@ -2,8 +2,15 @@
 import React from 'react';
 import { render } from 'ink';
 import { execSync } from 'child_process';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { App } from './app.js';
 import { isTmuxAvailable } from './lib/tmux.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
+const VERSION = pkg.version;
 
 const args = process.argv.slice(2);
 
@@ -21,7 +28,7 @@ if (args.includes('--help') || args.includes('-h')) {
 }
 
 if (args.includes('--version') || args.includes('-v')) {
-  console.log('0.1.0');
+  console.log(VERSION);
   process.exit(0);
 }
 
@@ -41,7 +48,7 @@ const red = (s: string) => `\x1b[31m${s}\x1b[0m`;
 
 console.log(`
 ${cyan('  ╔═══════════════════════════════╗')}
-${cyan('  ║')}   ${green('EZVibe Light')} v0.1.1        ${cyan('║')}
+${cyan('  ║')}   ${green('EZVibe Light')} v${VERSION}        ${cyan('║')}
 ${cyan('  ║')}   Lightweight Claude Manager   ${cyan('║')}
 ${cyan('  ╚═══════════════════════════════╝')}
 `);
@@ -71,5 +78,5 @@ if (!skipChecks) {
   console.log(`  ${cyan('!')} Skipping prerequisite checks\n`);
 }
 
-const { waitUntilExit } = render(<App />);
+const { waitUntilExit } = render(<App version={VERSION} />);
 await waitUntilExit();
