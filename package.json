@@ -1,0 +1,41 @@
+{
+  "name": "ezvibe-light",
+  "version": "0.1.0",
+  "description": "Lightweight TUI for managing Claude Code sessions and ideas",
+  "type": "module",
+  "bin": {
+    "ezvibe-light": "bin/ezvibe-light.js"
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "package.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node bin/ezvibe-light.js",
+    "test": "vitest run",
+    "test:unit": "vitest run __tests__/store.test.ts __tests__/tmux.test.ts",
+    "test:e2e": "vitest run __tests__/e2e.test.tsx",
+    "test:watch": "vitest"
+  },
+  "engines": {
+    "node": ">=18 <25"
+  },
+  "dependencies": {
+    "ink": "^5.1.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "ink-testing-library": "^4.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "MIT"
+}
