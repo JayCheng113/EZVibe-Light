@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Box, Text, useInput, useApp } from 'ink';
 import { Store } from './lib/store.js';
 import { CommandRegistry } from './lib/commands.js';
@@ -36,6 +36,13 @@ export function App({ version }: { version: string }) {
   const [rightPanel, setRightPanel] = useState<RightPanel>('detail');
   const [contextTab, setContextTab] = useState<ContextTab>('claudemd');
   const [overlay, setOverlay] = useState<Overlay>(null);
+  const [termRows, setTermRows] = useState(process.stdout.rows || 24);
+
+  useEffect(() => {
+    const onResize = () => setTermRows(process.stdout.rows || 24);
+    process.stdout.on('resize', onResize);
+    return () => { process.stdout.off('resize', onResize); };
+  }, []);
 
   const selectedIdea = ideas[selectedIndex] ?? undefined;
   const activeSession = selectedIdea ? getActiveSession(selectedIdea.id) : undefined;
@@ -258,7 +265,7 @@ export function App({ version }: { version: string }) {
   }
 
   return (
-    <Box flexDirection="column" height={process.stdout.rows || 24}>
+    <Box flexDirection="column" height={termRows}>
       {/* Header */}
       <Box paddingX={1}>
         <Text bold color="cyan">EZVibe Light</Text>
