@@ -57,32 +57,16 @@ export function App({ version }: { version: string }) {
     const reg = new CommandRegistry();
 
     // Navigation
-    reg.register({
-      name: 'move-down', key: 'j', description: 'Move down',
-      execute: () => setSelectedIndex(i => Math.min(i + 1, ideas.length - 1)),
-    });
-    reg.register({
-      name: 'move-down-arrow', key: 'down', description: 'Move down',
-      execute: () => setSelectedIndex(i => Math.min(i + 1, ideas.length - 1)),
-    });
-    reg.register({
-      name: 'move-up', key: 'k', description: 'Move up',
-      execute: () => setSelectedIndex(i => Math.max(i - 1, 0)),
-    });
-    reg.register({
-      name: 'move-up-arrow', key: 'up', description: 'Move up',
-      execute: () => setSelectedIndex(i => Math.max(i - 1, 0)),
-    });
+    const moveDown = () => setSelectedIndex(i => Math.min(i + 1, ideas.length - 1));
+    const moveUp = () => setSelectedIndex(i => Math.max(i - 1, 0));
+    reg.register({ name: 'move-down', key: 'j', description: 'Move down', execute: moveDown });
+    reg.register({ name: 'move-down-arrow', key: 'down', description: 'Move down', execute: moveDown });
+    reg.register({ name: 'move-up', key: 'k', description: 'Move up', execute: moveUp });
+    reg.register({ name: 'move-up-arrow', key: 'up', description: 'Move up', execute: moveUp });
 
     // App
-    reg.register({
-      name: 'quit', key: 'q', description: 'Quit',
-      execute: () => exit(),
-    });
-    reg.register({
-      name: 'help', key: '?', description: 'Toggle help',
-      execute: () => setOverlay({ type: 'help' }),
-    });
+    reg.register({ name: 'quit', key: 'q', description: 'Quit', execute: () => exit() });
+    reg.register({ name: 'help', key: '?', description: 'Toggle help', execute: () => setOverlay({ type: 'help' }) });
     reg.register({
       name: 'switch-panel', key: 'tab', description: 'Switch panel',
       execute: () => setRightPanel(p => {
@@ -90,20 +74,9 @@ export function App({ version }: { version: string }) {
         return panels[(panels.indexOf(p) + 1) % panels.length];
       }),
     });
-
-    // Context tabs
-    reg.register({
-      name: 'context-claudemd', key: '1', description: 'CLAUDE.md tab',
-      execute: () => setContextTab('claudemd'),
-    });
-    reg.register({
-      name: 'context-memory', key: '2', description: 'Memory tab',
-      execute: () => setContextTab('memory'),
-    });
-    reg.register({
-      name: 'context-plans', key: '3', description: 'Plans tab',
-      execute: () => setContextTab('plans'),
-    });
+    reg.register({ name: 'context-claudemd', key: '1', description: 'CLAUDE.md tab', execute: () => setContextTab('claudemd') });
+    reg.register({ name: 'context-memory', key: '2', description: 'Memory tab', execute: () => setContextTab('memory') });
+    reg.register({ name: 'context-plans', key: '3', description: 'Plans tab', execute: () => setContextTab('plans') });
 
     // Idea actions
     reg.register({
@@ -125,77 +98,59 @@ export function App({ version }: { version: string }) {
       },
     });
 
+    // Idea-scoped commands (canExecute guards selectedIdea)
+    const needsIdea = (ctx: import('./lib/commands.js').CommandContext) => !!ctx.selectedIdea;
+
     reg.register({
       name: 'attach-session', key: 'enter', description: 'Attach/create session',
-      canExecute: (ctx) => !!ctx.selectedIdea,
+      canExecute: needsIdea,
       execute: (ctx) => {
-        if (!ctx.selectedIdea) return;
-        const existing = getActiveSession(ctx.selectedIdea.id);
+        const idea = ctx.selectedIdea!;
+        const existing = getActiveSession(idea.id);
         if (existing) {
           attachSession(existing.tmuxSession);
         } else {
-          const cwd = ctx.selectedIdea.projectPath || process.cwd();
-          const session = startSession(ctx.selectedIdea.id, cwd);
+          const cwd = idea.projectPath || process.cwd();
+          const session = startSession(idea.id, cwd);
           if (session) attachSession(session.tmuxSession);
         }
-        // Refresh session state immediately after returning from tmux
         refresh();
       },
     });
 
-    reg.register({
-      name: 'cycle-stage', key: 's', description: 'Cycle stage forward',
-      canExecute: (ctx) => !!ctx.selectedIdea,
-      execute: (ctx) => { if (ctx.selectedIdea) cycleStage(ctx.selectedIdea.id); },
-    });
-    reg.register({
-      name: 'cycle-stage-back', key: 'S', description: 'Cycle stage backward',
-      canExecute: (ctx) => !!ctx.selectedIdea,
-      execute: (ctx) => { if (ctx.selectedIdea) cycleStage(ctx.selectedIdea.id, true); },
-    });
+    reg.register({ name: 'cycle-stage', key: 's', description: 'Cycle stage forward', canExecute: needsIdea,
+      execute: (ctx) => cycleStage(ctx.selectedIdea!.id) });
+    reg.register({ name: 'cycle-stage-back', key: 'S', description: 'Cycle stage backward', canExecute: needsIdea,
+      execute: (ctx) => cycleStage(ctx.selectedIdea!.id, true) });
 
     reg.register({
-      name: 'edit-idea', key: 'e', description: 'Edit idea',
-      canExecute: (ctx) => !!ctx.selectedIdea,
+      name: 'edit-idea', key: 'e', description: 'Edit idea', canExecute: needsIdea,
       execute: (ctx) => {
-        if (!ctx.selectedIdea) return;
-        const idea = ctx.selectedIdea;
+        const idea = ctx.selectedIdea!;
         wizard.start({
-          steps: [
-            { type: 'input', key: 'name', prompt: `Edit name (current: ${idea.name}):`, placeholder: idea.name },
-          ],
+          steps: [{ type: 'input', key: 'name', prompt: `Edit name (current: ${idea.name}):`, placeholder: idea.name }],
           onComplete: (r) => updateIdea(idea.id, { name: r.name }),
         });
       },
     });
 
     reg.register({
-      name: 'delete-idea', key: 'd', description: 'Delete idea',
-      canExecute: (ctx) => !!ctx.selectedIdea,
+      name: 'delete-idea', key: 'd', description: 'Delete idea', canExecute: needsIdea,
       execute: (ctx) => {
-        if (!ctx.selectedIdea) return;
-        const idea = ctx.selectedIdea;
+        const idea = ctx.selectedIdea!;
         setOverlay({
-          type: 'confirm',
-          prompt: `Delete "${idea.name}"? (y/N)`,
-          onConfirm: () => {
-            deleteIdea(idea.id);
-            setSelectedIndex(i => Math.max(0, i - 1));
-          },
+          type: 'confirm', prompt: `Delete "${idea.name}"? (y/N)`,
+          onConfirm: () => { deleteIdea(idea.id); setSelectedIndex(i => Math.max(0, i - 1)); },
         });
       },
     });
 
     reg.register({
-      name: 'set-project', key: 'p', description: 'Set project path',
-      canExecute: (ctx) => !!ctx.selectedIdea,
+      name: 'set-project', key: 'p', description: 'Set project path', canExecute: needsIdea,
       execute: (ctx) => {
-        if (!ctx.selectedIdea) return;
-        const idea = ctx.selectedIdea;
+        const idea = ctx.selectedIdea!;
         wizard.start({
-          steps: [
-            { type: 'project-picker', key: 'projectPath', prompt: 'Select project' },
-          ],
+          steps: [{ type: 'project-picker', key: 'projectPath', prompt: 'Select project' }],
           onComplete: (r) => updateIdea(idea.id, { projectPath: r.projectPath }),
         });
       },
@@ -203,33 +158,24 @@ export function App({ version }: { version: string }) {
 
     reg.register({
       name: 'stop-session', key: 'x', description: 'Stop session',
-      canExecute: (ctx) => {
-        if (!ctx.selectedIdea) return false;
-        return sessions.some(s => s.ideaId === ctx.selectedIdea!.id && s.status === 'active');
-      },
+      canExecute: (ctx) => !!ctx.selectedIdea && sessions.some(s => s.ideaId === ctx.selectedIdea!.id && s.status === 'active'),
       execute: (ctx) => {
-        if (!ctx.selectedIdea) return;
-        const idea = ctx.selectedIdea;
+        const idea = ctx.selectedIdea!;
         const session = sessions.find(s => s.ideaId === idea.id && s.status === 'active');
         if (!session) return;
         setOverlay({
-          type: 'confirm',
-          prompt: `Stop session for "${idea.name}"? (y/N)`,
+          type: 'confirm', prompt: `Stop session for "${idea.name}"? (y/N)`,
           onConfirm: () => killSession(session.id),
         });
       },
     });
 
     reg.register({
-      name: 'add-note', key: 'a', description: 'Add note',
-      canExecute: (ctx) => !!ctx.selectedIdea,
+      name: 'add-note', key: 'a', description: 'Add note', canExecute: needsIdea,
       execute: (ctx) => {
-        if (!ctx.selectedIdea) return;
-        const idea = ctx.selectedIdea;
+        const idea = ctx.selectedIdea!;
         wizard.start({
-          steps: [
-            { type: 'input', key: 'content', prompt: 'Add note:', placeholder: 'Type your note...' },
-          ],
+          steps: [{ type: 'input', key: 'content', prompt: 'Add note:', placeholder: 'Type your note...' }],
           onComplete: (r) => store.createNote(idea.id, r.content),
         });
       },

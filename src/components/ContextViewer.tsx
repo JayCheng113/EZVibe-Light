@@ -23,13 +23,12 @@ export function ContextViewer({ activeTab, claudeMd, memoryFiles, planFiles, pro
 
   return (
     <Box flexDirection="column" paddingX={1}>
-      {/* Tab bar */}
       <Box>
-        <TabLabel label="CLAUDE.md" shortcut="1" active={activeTab === 'claudemd'} />
+        <Text inverse={activeTab === 'claudemd'} bold={activeTab === 'claudemd'}>[1] CLAUDE.md</Text>
         <Text> </Text>
-        <TabLabel label="Memory" shortcut="2" active={activeTab === 'memory'} />
+        <Text inverse={activeTab === 'memory'} bold={activeTab === 'memory'}>[2] Memory</Text>
         <Text> </Text>
-        <TabLabel label="Plans" shortcut="3" active={activeTab === 'plans'} />
+        <Text inverse={activeTab === 'plans'} bold={activeTab === 'plans'}>[3] Plans</Text>
       </Box>
 
       <Box marginTop={1} flexDirection="column">
@@ -38,14 +37,6 @@ export function ContextViewer({ activeTab, claudeMd, memoryFiles, planFiles, pro
         {activeTab === 'plans' && <PlansView files={planFiles} />}
       </Box>
     </Box>
-  );
-}
-
-function TabLabel({ label, shortcut, active }: { label: string; shortcut: string; active: boolean }) {
-  return (
-    <Text inverse={active} bold={active}>
-      [{shortcut}] {label}
-    </Text>
   );
 }
 

@@ -150,25 +150,6 @@ export function discoverProjects(): DiscoveredProject[] {
   }
 }
 
-export function getPlanFile(filename: string): PlanFile | null {
-  try {
-    if (!fs.existsSync(CLAUDE_DIR)) return null;
-
-    const filePath = path.join(CLAUDE_DIR, 'plans', filename);
-    if (!fs.existsSync(filePath)) return null;
-
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const titleMatch = content.match(/^#\s+(.+)$/m);
-    return {
-      filename,
-      title: titleMatch ? titleMatch[1] : filename.replace('.md', ''),
-      content,
-    };
-  } catch {
-    return null;
-  }
-}
-
 export function getClaudeMd(projectPath: string): string | null {
   try {
     const key = projectPathToClaudeKey(projectPath);
