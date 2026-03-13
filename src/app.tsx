@@ -193,21 +193,19 @@ export function App({ version }: { version: string }) {
     });
 
     reg.register({
-      name: 'kill-session', key: 'x', description: 'Kill session',
+      name: 'stop-session', key: 'x', description: 'Stop session',
       canExecute: (ctx) => {
         if (!ctx.selectedIdea) return false;
-        // Allow kill if there's any session (active or dead but tmux still alive)
-        return sessions.some(s => s.ideaId === ctx.selectedIdea!.id);
+        return sessions.some(s => s.ideaId === ctx.selectedIdea!.id && s.status === 'active');
       },
       execute: (ctx) => {
         if (!ctx.selectedIdea) return;
         const idea = ctx.selectedIdea;
-        const session = sessions.find(s => s.ideaId === idea.id && s.status === 'active')
-          || sessions.find(s => s.ideaId === idea.id);
+        const session = sessions.find(s => s.ideaId === idea.id && s.status === 'active');
         if (!session) return;
         setOverlay({
           type: 'confirm',
-          prompt: `Kill session for "${idea.name}"? (y/N)`,
+          prompt: `Stop session for "${idea.name}"? (y/N)`,
           onConfirm: () => killSession(session.id),
         });
       },

@@ -41,10 +41,6 @@ export function IdeaList({ ideas, selectedIndex, sessions }: Props) {
               s => s.ideaId === idea.id && s.status === 'active'
             );
 
-            const hasDead = !hasActive && sessions.some(
-              s => s.ideaId === idea.id && s.status === 'dead'
-            );
-
             return (
               <Box key={idea.id} paddingLeft={1}>
                 <Text
@@ -55,7 +51,6 @@ export function IdeaList({ ideas, selectedIndex, sessions }: Props) {
                   {idea.name}
                 </Text>
                 {hasActive && <Text color="green"> ● running</Text>}
-                {hasDead && <Text color="gray"> ○ stopped</Text>}
               </Box>
             );
           })}

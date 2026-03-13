@@ -1,6 +1,6 @@
 {
   "name": "ezvibe-light",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Lightweight TUI for managing Claude Code sessions and ideas",
   "type": "module",
   "bin": {

@@ -43,7 +43,7 @@ export function IdeaDetail({ idea, activeSession, notes }: Props) {
         {activeSession ? (
           <Text color="green">● running ({activeSession.tmuxSession})</Text>
         ) : (
-          <Text dimColor>○ no session - press Enter to start</Text>
+          <Text dimColor>press Enter to start</Text>
         )}
       </Box>
 

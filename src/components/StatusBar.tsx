@@ -18,7 +18,7 @@ export function StatusBar({ rightPanel, activeSessionCount, ideaCount }: Props) 
           <Text bold>[s]</Text>tage{' '}
           <Text bold>[e]</Text>dit{' '}
           <Text bold>[d]</Text>elete{' '}
-          <Text bold>[x]</Text>kill{' '}
+          <Text bold>[x]</Text>stop{' '}
           <Text bold>[Tab]</Text>panel{' '}
           <Text bold>[a]</Text>note{' '}
           <Text bold>[?]</Text>help{' '}

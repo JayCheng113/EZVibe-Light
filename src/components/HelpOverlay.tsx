@@ -9,7 +9,7 @@ const SHORTCUTS = [
   ['', '── Session ──'],
   ['Enter', 'Attach/create Claude Code session'],
   ['Ctrl-b d', 'Detach from session (back to EZVibe)'],
-  ['x', 'Kill session'],
+  ['x', 'Stop session'],
   ['', '── Ideas ──'],
   ['j / Down', 'Move down'],
   ['k / Up', 'Move up'],
