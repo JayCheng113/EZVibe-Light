@@ -16,13 +16,14 @@ export function ProjectPicker({ onSelect, onCancel }: Props) {
       onCancel();
       return;
     }
+    if (projects.length === 0) return;
     if (input === 'j' || key.downArrow) {
       setSelectedIdx(i => Math.min(i + 1, projects.length - 1));
     }
     if (input === 'k' || key.upArrow) {
       setSelectedIdx(i => Math.max(i - 1, 0));
     }
-    if (key.return && projects.length > 0) {
+    if (key.return) {
       onSelect(projects[selectedIdx].path);
     }
   });

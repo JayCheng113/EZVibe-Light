@@ -117,7 +117,9 @@ export function App({ version }: { version: string }) {
           ],
           onComplete: (r) => {
             createIdea(r.name, r.description, r.projectPath);
-            setSelectedIndex(ideas.length);
+            // New idea is 'exploring' (first stage group), select last exploring item
+            const exploringCount = ideas.filter(i => i.stage === 'exploring').length + 1;
+            setSelectedIndex(exploringCount - 1);
           },
         });
       },

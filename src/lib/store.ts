@@ -39,7 +39,14 @@ export class Store {
       }
       if (fs.existsSync(this.filePath)) {
         const raw = fs.readFileSync(this.filePath, 'utf-8');
-        this.data = JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        // Validate structure — fall back to defaults for missing/invalid fields
+        this.data = {
+          version: 1,
+          ideas: Array.isArray(parsed.ideas) ? parsed.ideas : [],
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : [],
+          notes: Array.isArray(parsed.notes) ? parsed.notes : [],
+        };
       }
     } catch {
       this.data = defaultData();
@@ -47,6 +54,10 @@ export class Store {
   }
 
   save(): void {
+    // Ensure directory exists (could be deleted while app is running)
+    if (!fs.existsSync(this.dir)) {
+      fs.mkdirSync(this.dir, { recursive: true });
+    }
     const tmp = this.filePath + '.tmp';
     fs.writeFileSync(tmp, JSON.stringify(this.data, null, 2));
     fs.renameSync(tmp, this.filePath);
