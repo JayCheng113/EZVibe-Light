@@ -46,22 +46,30 @@ ${cyan('  ║')}   Lightweight Claude Manager   ${cyan('║')}
 ${cyan('  ╚═══════════════════════════════╝')}
 `);
 
-if (!isTmuxAvailable()) {
-  console.log(red('  Error: tmux is required but not found.'));
-  console.log('  Install it:');
-  console.log('    macOS: brew install tmux');
-  console.log('    Ubuntu: sudo apt install tmux');
-  process.exit(1);
-}
+const skipChecks = args.includes('--no-check');
 
-if (!checkClaude()) {
-  console.log(red('  Error: Claude Code CLI not found.'));
-  console.log('  Install it: npm install -g @anthropic-ai/claude-code');
-  process.exit(1);
-}
+if (!skipChecks) {
+  if (!isTmuxAvailable()) {
+    console.log(red('  Error: tmux is required but not found.'));
+    console.log('  Install it:');
+    console.log('    macOS: brew install tmux');
+    console.log('    Ubuntu: sudo apt install tmux');
+    console.log('  Or run with --no-check to skip prerequisite checks.');
+    process.exit(1);
+  }
 
-console.log(`  ${green('✓')} tmux detected`);
-console.log(`  ${green('✓')} Claude Code detected\n`);
+  if (!checkClaude()) {
+    console.log(red('  Error: Claude Code CLI not found.'));
+    console.log('  Install it: npm install -g @anthropic-ai/claude-code');
+    console.log('  Or run with --no-check to skip prerequisite checks.');
+    process.exit(1);
+  }
+
+  console.log(`  ${green('✓')} tmux detected`);
+  console.log(`  ${green('✓')} Claude Code detected\n`);
+} else {
+  console.log(`  ${cyan('!')} Skipping prerequisite checks\n`);
+}
 
 const { waitUntilExit } = render(<App />);
 await waitUntilExit();
