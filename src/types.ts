@@ -32,16 +32,3 @@ export type Stage = Idea['stage'];
 export type RightPanel = 'detail' | 'context' | 'notes';
 
 export type ContextTab = 'claudemd' | 'memory' | 'plans';
-
-export interface AppState {
-  selectedIndex: number;
-  rightPanel: RightPanel;
-  contextTab: ContextTab;
-  inputMode: InputMode | null;
-}
-
-export type InputMode =
-  | { type: 'create-idea'; step: 'name' | 'description' | 'project' }
-  | { type: 'edit-idea'; ideaId: string; field: 'name' | 'description' }
-  | { type: 'add-note'; ideaId: string }
-  | { type: 'confirm-delete'; ideaId: string };

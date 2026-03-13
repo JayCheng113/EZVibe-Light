@@ -1,41 +1,43 @@
 <p align="center">
   <b>EZVibe Light</b><br>
-  <i>37 KB. Zero native deps. Full Claude Code orchestration.</i>
+  <i>43 KB. Zero native deps. Full Claude Code orchestration.</i>
 </p>
 
 <p align="center">
   <a href="#quick-start">Quick Start</a> &middot;
-  <a href="#how-it-works">How It Works</a> &middot;
+  <a href="#the-workflow">Workflow</a> &middot;
   <a href="#keyboard-shortcuts">Shortcuts</a> &middot;
   <a href="#architecture">Architecture</a>
 </p>
 
 ---
 
-You're juggling 5 Claude Code sessions across 3 projects. Terminal tabs everywhere. You forgot which session was for the auth refactor. The API design plan? Somewhere in `~/.claude/plans/`. Your notes? Gone.
+You're running 5 Claude Code sessions across 3 projects. Terminal tabs everywhere. You forgot which one was the auth refactor. The API plan? Buried in `~/.claude/`. Your notes? Gone.
 
-**EZVibe Light fixes this in 37 KB.**
+**One command. All your sessions. All your context.**
+
+```bash
+npx ezvibe-light
+```
 
 ```
 ┌─ Ideas ───────┬─ Detail ─────────────────┐
 │ ? EXPLORING   │                          │
 │ > Auth Refac… │ > Auth Refactor          │
-│   New Feature │                          │
+│   API Client  │                          │
 │               │ Stage: implementing      │
 │ # PLANNING    │ Path:  ~/projects/auth   │
-│   API Design  │ Session: ● active        │
+│   DB Schema   │ Session: ● running       │
 │               │                          │
 │ > IMPLEMENTING│ Notes (2)                │
 │   Login Page  │ - Check migration script │
-│               │ - Update JWT config      │
+│     ● running │ - Update JWT config      │
 │ * DONE        ├──────────────────────────┤
 │   Dark Theme  │ [1]CLAUDE.md [2]Memory   │
-│               │ [3]Plans                 │
+│     ○ stopped │ [3]Plans                 │
 └───────────────┴──────────────────────────┘
  [n]ew [Enter]attach [s]tage [Tab]panel [q]uit
 ```
-
-One TUI. All your ideas. All your sessions. All your Claude context.
 
 ## Quick Start
 
@@ -43,7 +45,7 @@ One TUI. All your ideas. All your sessions. All your Claude context.
 npx ezvibe-light
 ```
 
-That's it. No build step. No config files. No browser. No native compilation.
+No build step. No config files. No browser. No compilation. Just works.
 
 > Requires Node.js 18+, [tmux](https://github.com/tmux/tmux), and [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
@@ -61,65 +63,76 @@ npm install -g @anthropic-ai/claude-code
 
 </details>
 
-## How It Works
+## The Workflow
 
 ```
-   You press 'n'          You press Enter        You press Ctrl-b d
-        |                       |                        |
-   Name your idea     -->  Claude Code starts   -->  Back to EZVibe Light
-   Pick a project          in a tmux session         Session keeps running
-   Set the stage           Full terminal control     Pick up where you left off
+  Press 'n'              Press Enter            Press Ctrl-b d
+      │                      │                       │
+  Name your idea    →   Claude Code launches   →  Back to EZVibe Light
+  Pick a project        in a tmux session         Session keeps running
+                        Full terminal access      Switch to another idea
 ```
 
-**The key insight:** tmux sessions survive everything. Close your terminal, SSH disconnect, reboot EZVibe Light — your Claude Code sessions are still there, exactly where you left them.
+**The key insight:** tmux sessions are immortal. Close your terminal, lose SSH, reboot — your Claude Code sessions are still there, right where you left them.
 
-### The Workflow
+### Switching Between Sessions
 
-1. **`n`** &mdash; Create an idea. Name it, describe it, pick a project from your `~/.claude/projects/`
-2. **`Enter`** &mdash; Launch Claude Code in tmux (or reattach to an existing session)
-3. **`Ctrl-b d`** &mdash; Detach. You're back in EZVibe Light. Claude keeps running.
-4. **`s`** &mdash; Move your idea through stages: `exploring` &rarr; `planning` &rarr; `implementing` &rarr; `done`
-5. **`Tab`** &mdash; Browse your CLAUDE.md, memory files, and plans — without leaving the TUI
+This is the core loop:
 
-## Why Not Just Use Terminal Tabs?
+1. **`Enter`** — Jump into a Claude Code session
+2. **`Ctrl-b d`** — Detach. Back to EZVibe Light. Claude keeps running in the background.
+3. **`j/k`** — Select another idea
+4. **`Enter`** — Jump into that session
+
+All sessions run simultaneously. Switch between them in seconds.
+
+### Full Lifecycle
+
+1. **`n`** — Create an idea. Name it, pick a project from `~/.claude/projects/`
+2. **`Enter`** — Launch Claude Code (or reattach to an existing session)
+3. **`Ctrl-b d`** — Detach. Switch to another idea. Repeat.
+4. **`s`** — Move through stages: `exploring` → `planning` → `implementing` → `done`
+5. **`Tab`** — Browse CLAUDE.md, memory files, and plans without leaving the TUI
+
+## Why Not Terminal Tabs?
 
 | | Terminal tabs | EZVibe Light |
 |---|---|---|
-| **Remember which session is which** | You don't | Idea names + stages |
-| **See Claude's plans/memory** | Open another terminal, cat the files | Press `Tab` |
-| **Track progress across projects** | Sticky notes? | Built-in lifecycle |
+| **Which session is which?** | You don't know | Idea names + stages + status |
+| **Claude's plans/memory** | Another terminal, cat files | Press `Tab` |
+| **Track progress** | Sticky notes? | Built-in lifecycle |
 | **Session persistence** | Close tab = gone | tmux = immortal |
-| **Take notes on a task** | Open a text editor | Press `a` |
+| **Notes on a task** | Open a text editor | Press `a` |
 
 ## Why Not EZVibe (Web)?
 
-EZVibe Light is EZVibe's little sibling. Same ideas, radically different philosophy.
+Same family, different philosophy.
 
-| | EZVibe (Web) | EZVibe Light |
+| | [EZVibe](https://github.com/JayCheng113/EZVibe) | EZVibe Light |
 |---|---|---|
-| **Install** | Minutes (C++ compilation) | **3 seconds** |
-| **Runtime deps** | 15+ including native modules | **3** (pure JavaScript) |
-| **Bundle** | Multi-MB Next.js build | **37 KB** |
-| **Startup** | Build + dual-process boot | **Instant** |
+| **Install** | Minutes (C++ compilation) | **Instant** |
+| **Runtime deps** | 15+ including native modules | **3** (pure JS) |
+| **Bundle** | Multi-MB Next.js | **43 KB** |
 | **Over SSH** | No (needs browser) | **Yes** |
-| **Form factor** | Browser tab | **Your terminal** |
+| **Form factor** | Browser dashboard | **Your terminal** |
 
-If you want dashboards and WebGL terminals, use [EZVibe](https://github.com/JayCheng113/EZVibe). If you want something that starts before you finish blinking, use EZVibe Light.
+Want WebGL terminals and dashboards? Use [EZVibe](https://github.com/JayCheng113/EZVibe). Want something that starts before you finish blinking? Use EZVibe Light.
 
 ## Keyboard Shortcuts
 
-Everything is one keypress away. No menus. No mouse.
+Every action is one keypress. No menus. No mouse. Press `?` for the full list.
 
-### Navigation
+### Sessions
 | Key | Action |
 |---|---|
-| `j` / `k` | Move up / down |
-| `Tab` | Cycle panels: Detail &rarr; Context &rarr; Notes |
-| `1` `2` `3` | Context tabs: CLAUDE.md / Memory / Plans |
+| `Enter` | Attach Claude Code session (creates one if none exists) |
+| `Ctrl-b d` | Detach — back to EZVibe Light, session keeps running |
+| `x` | Kill session |
 
 ### Ideas
 | Key | Action |
 |---|---|
+| `j` / `k` | Navigate up / down |
 | `n` | New idea (guided wizard) |
 | `s` / `S` | Cycle stage forward / backward |
 | `e` | Edit name |
@@ -127,47 +140,41 @@ Everything is one keypress away. No menus. No mouse.
 | `p` | Set project path |
 | `a` | Add a note |
 
-### Sessions
+### Panels
 | Key | Action |
 |---|---|
-| `Enter` | Attach session (creates one if none exists) |
-| `x` | Kill session |
-| `Ctrl-b d` | Detach from tmux (while inside a session) |
-
-### App
-| Key | Action |
-|---|---|
-| `?` | Show all shortcuts |
-| `q` | Quit |
+| `Tab` | Cycle: Detail → Context → Notes |
+| `1` `2` `3` | Context tabs: CLAUDE.md / Memory / Plans |
 
 ## Architecture
 
 ```
-ezvibe-light
-├── Ink (React for CLI)        TUI rendering
-├── CommandRegistry            Extensible keyboard actions
-├── Wizard state machine       Multi-step input flows
-├── tmux                       Session persistence
-├── JSON file                  Data storage
-└── ~/.claude/ reader          Plans, memory, CLAUDE.md
+43 KB bundle. 3 dependencies. Single process.
+
+┌────────────────────────────────────────────┐
+│  Ink (React for CLI)     TUI rendering     │
+│  CommandRegistry         Extensible keys   │
+│  Wizard state machine    Multi-step flows  │
+│  tmux                    Session immortality│
+│  JSON file               Zero-config store │
+│  ~/.claude/ reader       Plans + memory    │
+└────────────────────────────────────────────┘
 ```
 
-**1,900 lines. Single process. Zero native deps. 43 tests.**
-
-No Express server. No WebSocket layer. No webpack build. Just Node.js talking to tmux.
+No Express. No WebSocket. No webpack. Just Node.js talking to tmux.
 
 ### Data
 
 ```
 ~/.ezvibe-light/
-└── data.json          # Your ideas, sessions, notes — human-readable JSON
+└── data.json     # Ideas, sessions, notes — human-readable JSON
 ```
 
 Back it up, version-control it, edit it by hand. It's just a file.
 
 ### Extensibility
 
-Commands are registered declaratively:
+Add commands without touching the core:
 
 ```typescript
 commands.register({
@@ -191,27 +198,24 @@ wizard.start({
 });
 ```
 
-No callback nesting. No framework lock-in. Add features without touching the core.
-
 ## Development
 
 ```bash
-cd ezvibe-light
+git clone https://github.com/JayCheng113/EZVibe-Light.git
+cd EZVibe-Light
 npm install           # 3 seconds, zero compilation
-npm run dev           # watch mode with tsup
-npm run build         # production build (37 KB)
-npm test              # 43 tests across 5 suites
+npm run dev           # watch mode
+npm run build         # production build (43 KB)
+npm test              # 43 tests, 5 suites
 ```
 
-### Test Coverage
-
-| Suite | Tests | What it covers |
+| Suite | Tests | Covers |
 |---|---|---|
-| `store.test.ts` | 16 | CRUD, persistence, cascading deletes, edge cases |
-| `tmux.test.ts` | 14 | Command construction, session lifecycle, env cleanup |
-| `commands.test.ts` | 6 | Registration, guards, key resolution, unregister |
+| `store.test.ts` | 16 | CRUD, persistence, cascading deletes |
+| `tmux.test.ts` | 14 | Command construction, session lifecycle |
+| `commands.test.ts` | 6 | Registration, guards, key resolution |
 | `wizard.test.tsx` | 3 | Step progression, completion, cancellation |
-| `e2e.test.tsx` | 4 | Full app rendering, shortcuts, overlay lifecycle |
+| `e2e.test.tsx` | 4 | Full app rendering, shortcuts, overlays |
 
 ## License
 
@@ -220,5 +224,5 @@ MIT
 ---
 
 <p align="center">
-  <b>Built with Claude Code.</b> The entire thing — brainstorming, spec, implementation, tests — was built using the tool it manages.
+  <b>Built with Claude Code.</b> The tool that manages Claude Code — built entirely by Claude Code.
 </p>

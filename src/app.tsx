@@ -29,7 +29,7 @@ export function App() {
   const { exit } = useApp();
 
   const { ideas, createIdea, updateIdea, deleteIdea, cycleStage } = useIdeas(store);
-  const { sessions, startSession, attachSession, killSession, getActiveSession } = useSessions(store);
+  const { sessions, startSession, attachSession, killSession, getActiveSession, refresh } = useSessions(store);
   const wizard = useWizard();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -129,6 +129,8 @@ export function App() {
           const session = startSession(ctx.selectedIdea.id, cwd);
           if (session) attachSession(session.tmuxSession);
         }
+        // Refresh session state immediately after returning from tmux
+        refresh();
       },
     });
 
@@ -192,11 +194,17 @@ export function App() {
 
     reg.register({
       name: 'kill-session', key: 'x', description: 'Kill session',
-      canExecute: (ctx) => !!ctx.activeSession,
+      canExecute: (ctx) => {
+        if (!ctx.selectedIdea) return false;
+        // Allow kill if there's any session (active or dead but tmux still alive)
+        return sessions.some(s => s.ideaId === ctx.selectedIdea!.id);
+      },
       execute: (ctx) => {
-        if (!ctx.activeSession || !ctx.selectedIdea) return;
-        const session = ctx.activeSession;
+        if (!ctx.selectedIdea) return;
         const idea = ctx.selectedIdea;
+        const session = sessions.find(s => s.ideaId === idea.id && s.status === 'active')
+          || sessions.find(s => s.ideaId === idea.id);
+        if (!session) return;
         setOverlay({
           type: 'confirm',
           prompt: `Kill session for "${idea.name}"? (y/N)`,
@@ -222,7 +230,7 @@ export function App() {
 
     return reg;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ideas.length, selectedIdea?.id, activeSession?.id]);
+  }, [ideas.length, selectedIdea?.id, activeSession?.id, sessions]);
 
   // -- Input handling --
 

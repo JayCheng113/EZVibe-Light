@@ -37,7 +37,7 @@ export function useSessions(store: Store) {
     (ideaId: string, cwd: string): Session | null => {
       const name = tmux.tmuxSessionName(ideaId);
 
-      // Kill existing dead tmux session with same name
+      // Kill any existing tmux session with same name before creating a new one
       if (tmux.isTmuxSessionAlive(name)) {
         tmux.killTmuxSession(name);
       }

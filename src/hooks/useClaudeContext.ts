@@ -25,11 +25,14 @@ export function useClaudeContext(
     planFiles: [],
   });
 
+  // Reset all context when project changes
   useEffect(() => {
-    if (!projectPath) {
-      setContext({ claudeMd: null, memoryFiles: [], planFiles: [] });
-      return;
-    }
+    setContext({ claudeMd: null, memoryFiles: [], planFiles: [] });
+  }, [projectPath]);
+
+  // Load data for the active tab
+  useEffect(() => {
+    if (!projectPath) return;
 
     const key = projectPathToClaudeKey(projectPath);
 

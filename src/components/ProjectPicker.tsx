@@ -37,19 +37,31 @@ export function ProjectPicker({ onSelect, onCancel }: Props) {
     );
   }
 
+  // Show a scrolling window of 15 items centered on selection
+  const maxVisible = 15;
+  const start = Math.max(0, Math.min(selectedIdx - Math.floor(maxVisible / 2), projects.length - maxVisible));
+  const visible = projects.slice(start, start + maxVisible);
+
   return (
     <Box borderStyle="round" borderColor="cyan" flexDirection="column" paddingX={1}>
       <Text bold color="cyan">Select Project (j/k to navigate, Enter to select)</Text>
-      {projects.slice(0, 15).map((proj, i) => (
-        <Box key={proj.path}>
-          <Text inverse={i === selectedIdx} bold={i === selectedIdx}>
-            {i === selectedIdx ? '> ' : '  '}
-            {proj.name}
-            <Text dimColor> {proj.path}</Text>
-            {proj.hasClaudeMd && <Text color="green"> [CLAUDE.md]</Text>}
-          </Text>
-        </Box>
-      ))}
+      {start > 0 && <Text dimColor>  ↑ {start} more</Text>}
+      {visible.map((proj, i) => {
+        const idx = start + i;
+        return (
+          <Box key={proj.path}>
+            <Text inverse={idx === selectedIdx} bold={idx === selectedIdx}>
+              {idx === selectedIdx ? '> ' : '  '}
+              {proj.name}
+              <Text dimColor> {proj.path}</Text>
+              {proj.hasClaudeMd && <Text color="green"> [CLAUDE.md]</Text>}
+            </Text>
+          </Box>
+        );
+      })}
+      {start + maxVisible < projects.length && (
+        <Text dimColor>  ↓ {projects.length - start - maxVisible} more</Text>
+      )}
       <Text dimColor>Esc to cancel</Text>
     </Box>
   );

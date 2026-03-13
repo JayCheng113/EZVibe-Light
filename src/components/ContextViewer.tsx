@@ -53,15 +53,15 @@ function ClaudeMdView({ content }: { content: string | null }) {
   if (!content) {
     return <Text dimColor>No CLAUDE.md found.</Text>;
   }
-  // Show first 20 lines
-  const lines = content.split('\n').slice(0, 20);
+  const allLines = content.split('\n');
+  const lines = allLines.slice(0, 20);
   return (
     <Box flexDirection="column">
       {lines.map((line, i) => (
         <Text key={i}>{line}</Text>
       ))}
-      {content.split('\n').length > 20 && (
-        <Text dimColor>... ({content.split('\n').length - 20} more lines)</Text>
+      {allLines.length > 20 && (
+        <Text dimColor>... ({allLines.length - 20} more lines)</Text>
       )}
     </Box>
   );
