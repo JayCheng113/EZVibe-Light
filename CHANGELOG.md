@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.1.10] - 2026-03-14
+
+### Added
+- 71 scenario and cross-feature tests (157 total)
+- Auto-create GitHub Release on publish
+
 ## [0.1.8] - 2026-03-14
 
 ### Added
@@ -72,6 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - Keyboard-driven interface
 - Context viewer for Claude Code data
 
+[0.1.10]: https://github.com/JayCheng113/EZVibe-Light/compare/v0.1.8...v0.1.10
 [0.1.8]: https://github.com/JayCheng113/EZVibe-Light/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/JayCheng113/EZVibe-Light/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/JayCheng113/EZVibe-Light/compare/v0.1.5...v0.1.6
