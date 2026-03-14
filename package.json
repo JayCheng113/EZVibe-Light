@@ -1,6 +1,6 @@
 {
   "name": "ezvibe-light",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Lightweight TUI for managing Claude Code sessions and ideas",
   "type": "module",
   "bin": {
@@ -44,5 +44,12 @@
     "url": "https://github.com/JayCheng113/EZVibe-Light.git"
   },
   "homepage": "https://github.com/JayCheng113/EZVibe-Light",
-  "keywords": ["claude-code", "tmux", "tui", "cli", "session-manager", "ink"]
+  "keywords": [
+    "claude-code",
+    "tmux",
+    "tui",
+    "cli",
+    "session-manager",
+    "ink"
+  ]
 }
